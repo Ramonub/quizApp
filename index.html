@@ -3,51 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Message Sender</title>
+    <title>Questionnaire</title>
 </head>
 <body>
     <div id="nameInputSection">
         <label for="nameInput">Voer je naam in:</label><br>
         <input type="text" id="nameInput" placeholder="Je naam"><br>
-        <button onclick="startMessaging()">Start met berichten sturen</button>
+        <button onclick="sendName()">Bevestigen</button>
     </div>
 
-    <div id="messagingSection" style="display: none;">
-        <label for="messageInput">Voer je bericht in:</label><br>
-        <textarea id="messageInput" rows="4" cols="50" placeholder="Je bericht"></textarea><br>
-        <button onclick="sendMessage()">Verstuur Bericht</button>
+    <div id="questionSection" style="display: none;">
+        <div id="questionText"></div>
+        <input type="text" id="answerInput" placeholder="Je antwoord"><br>
+        <button onclick="sendAnswer()">Verstuur Antwoord</button>
     </div>
-
-    <div id="sentMessages"></div>
 
     <script>
         var name;
+        var currentQuestionIndex = 0;
+        var questions = [
+            "Wat is je favoriete kleur?",
+            "Wat is je favoriete dier?"
+            // Voeg hier meer vragen toe
+        ];
 
-        function startMessaging() {
+        function sendName() {
             name = document.getElementById("nameInput").value;
             if (name.trim() === "") {
                 alert("Voer alsjeblieft je naam in.");
             } else {
                 document.getElementById("nameInputSection").style.display = "none";
-                document.getElementById("messagingSection").style.display = "block";
+                document.getElementById("questionSection").style.display = "block";
+                showQuestion();
             }
         }
 
-        function sendMessage() {
-            var message = document.getElementById("messageInput").value;
-            var fullMessage = name + ": " + message;
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://localhost:8080/", true); // URL van de WPF-hostapplicatie
-            xhr.setRequestHeader("Content-Type", "text/plain");
-            xhr.send(fullMessage);
-            displaySentMessage(fullMessage);
+        function showQuestion() {
+            document.getElementById("questionText").innerText = questions[currentQuestionIndex];
         }
 
-        function displaySentMessage(message) {
-            var sentMessagesDiv = document.getElementById("sentMessages");
-            var p = document.createElement("p");
-            p.textContent = message;
-            sentMessagesDiv.appendChild(p);
+        function sendAnswer() {
+            var answer = document.getElementById("answerInput").value;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "http://localhost:8080/answer", true); // URL van de WPF-hostapplicatie
+            xhr.setRequestHeader("Content-Type", "text/plain");
+            xhr.send(answer);
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                document.getElementById("questionSection").innerHTML = "<p>Alle vragen zijn beantwoord. Bedankt!</p>";
+            }
         }
     </script>
 </body>
