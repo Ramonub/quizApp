@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Sender</title>
+</head>
+<body>
+    <div id="nameInputSection">
+        <label for="nameInput">Voer je naam in:</label><br>
+        <input type="text" id="nameInput" placeholder="Je naam"><br>
+        <button onclick="startMessaging()">Start met berichten sturen</button>
+    </div>
+
+    <div id="messagingSection" style="display: none;">
+        <label for="messageInput">Voer je bericht in:</label><br>
+        <textarea id="messageInput" rows="4" cols="50" placeholder="Je bericht"></textarea><br>
+        <button onclick="sendMessage()">Verstuur Bericht</button>
+    </div>
+
+    <div id="sentMessages"></div>
+
+    <script>
+        var name;
+
+        function startMessaging() {
+            name = document.getElementById("nameInput").value;
+            if (name.trim() === "") {
+                alert("Voer alsjeblieft je naam in.");
+            } else {
+                document.getElementById("nameInputSection").style.display = "none";
+                document.getElementById("messagingSection").style.display = "block";
+            }
+        }
+
+        function sendMessage() {
+            var message = document.getElementById("messageInput").value;
+            var fullMessage = name + ": " + message;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "http://localhost:8080/", true); // URL van de WPF-hostapplicatie
+            xhr.setRequestHeader("Content-Type", "text/plain");
+            xhr.send(fullMessage);
+            displaySentMessage(fullMessage);
+        }
+
+        function displaySentMessage(message) {
+            var sentMessagesDiv = document.getElementById("sentMessages");
+            var p = document.createElement("p");
+            p.textContent = message;
+            sentMessagesDiv.appendChild(p);
+        }
+    </script>
+</body>
+</html>
