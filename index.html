@@ -3,57 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Questionnaire</title>
+    <title>Questionnaire Client</title>
 </head>
 <body>
-    <div id="nameInputSection">
-        <label for="nameInput">Voer je naam hier in:</label><br>
-        <input type="text" id="nameInput" placeholder="Je naam"><br>
-        <button onclick="sendName()">Bevestigen</button>
-    </div>
-
-    <div id="questionSection" style="display: none;">
-        <div id="questionText"></div>
+    <div id="answerSection">
+        <label for="answerInput">Antwoord:</label><br>
         <input type="text" id="answerInput" placeholder="Je antwoord"><br>
         <button onclick="sendAnswer()">Verstuur Antwoord</button>
     </div>
 
     <script>
-        var name;
-        var currentQuestionIndex = 0;
-        var questions = [
-            "Wat is je favoriete kleur?",
-            "Wat is je favoriete dier?"
-            // Voeg hier meer vragen toe
-        ];
-
-        function sendName() {
-            name = document.getElementById("nameInput").value;
-            if (name.trim() === "") {
-                alert("Voer alsjeblieft je naam in.");
-            } else {
-                document.getElementById("nameInputSection").style.display = "none";
-                document.getElementById("questionSection").style.display = "block";
-                showQuestion();
-            }
-        }
-
-        function showQuestion() {
-            document.getElementById("questionText").innerText = questions[currentQuestionIndex];
-        }
-
         function sendAnswer() {
             var answer = document.getElementById("answerInput").value;
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "http://localhost:8080/answer", true); // URL van de WPF-hostapplicatie
             xhr.setRequestHeader("Content-Type", "text/plain");
             xhr.send(answer);
-            currentQuestionIndex++;
-            if (currentQuestionIndex < questions.length) {
-                showQuestion();
-            } else {
-                document.getElementById("questionSection").innerHTML = "<p>Alle vragen zijn beantwoord. Bedankt!</p>";
-            }
         }
     </script>
 </body>
