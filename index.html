@@ -4,36 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebSocket Client</title>
-    <style>
-        button {
-            width: 150px;
-            height: 100px;
-            font-size: 18px;
-            margin: 10px;
-        }
-
-        .button-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-    </style>
 </head>
 <body>
-    <div class="button-container">
-        <button id="btnA">Send A</button>
-        <button id="btnB">Send B</button>
-        <button id="btnC">Send C</button>
-        <button id="btnD">Send D</button>
-    </div>
-
     <script>
-        const ws = new WebSocket('ws://192.168.2.10:8080');
+        const ws = new WebSocket('ws://192.168.2.10:8080'); // Vervang <server-ip> door het IP-adres van jouw server
 
         ws.onopen = function() {
-            console.log('Connected to server with ip 192.168.2.10');
+            console.log('Connected to server');
         };
 
         ws.onmessage = function(event) {
@@ -44,26 +21,14 @@
             console.log('Connection closed');
         };
 
-        document.getElementById('btnA').addEventListener('click', function() {
-            sendMessage('A');
-        });
-
-        document.getElementById('btnB').addEventListener('click', function() {
-            sendMessage('B');
-        });
-
-        document.getElementById('btnC').addEventListener('click', function() {
-            sendMessage('C');
-        });
-
-        document.getElementById('btnD').addEventListener('click', function() {
-            sendMessage('D');
-        });
-
-        function sendMessage(message) {
+        function sendMessage() {
+            const message = document.getElementById('messageInput').value;
             console.log('Sending: ' + message);
             ws.send(message);
         }
     </script>
+
+    <input type="text" id="messageInput" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
 </body>
 </html>
